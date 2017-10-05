@@ -71,7 +71,7 @@ package crystal.crystal3d.physics
 					if (body.primitives[i].getCollisionPrimitive() is CollisionComposite)
 					{
 						for each (var clt:Object in compositeLocalTransforms)
-							if (CollisionComposite(body.primitives[i].getCollisionPrimitive()) == clt.composite)
+							if (CollisionComposite(body.primitives[i].getCollisionPrimitive()) == clt.composite && clt.localTransform != null)
 							{
 								var primTransformPos:Vector3 = new Vector3();
 								var primTransformAng:Vector3 = new Vector3();
@@ -106,12 +106,13 @@ package crystal.crystal3d.physics
 		public static function setCompositeLocalTransform(composite:CollisionComposite, localTransform:Matrix4):void
 		{
 			var haveItsComposite:Boolean;
-			for each (var clt:Object in compositeLocalTransforms)
+			for (var i:int = 0; i < compositeLocalTransforms.length; i++)
 			{
-				if (composite == clt.composite)
+				if (composite == compositeLocalTransforms[i].composite)
 				{
 					haveItsComposite = true;
-					clt.localTransform = localTransform;
+					if (localTransform == null) compositeLocalTransforms.splice(i, 1);
+					else compositeLocalTransforms[i].localTransform = localTransform;
 					break;
 				}
 			}
